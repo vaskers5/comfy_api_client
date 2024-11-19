@@ -1,0 +1,119 @@
+{
+    "3": {
+      "inputs": {
+        "seed": 42,
+        "steps": 6,
+        "cfg": 3,
+        "sampler_name": "dpm_fast",
+        "scheduler": "karras",
+        "denoise": 1,
+        "model": [
+          "4",
+          0
+        ],
+        "positive": [
+          "6",
+          0
+        ],
+        "negative": [
+          "7",
+          0
+        ],
+        "latent_image": [
+          "5",
+          0
+        ]
+      },
+      "class_type": "KSampler",
+      "_meta": {
+        "title": "KSampler"
+      }
+    },
+    "4": {
+      "inputs": {
+        "ckpt_name": "natvisNaturalVision_v10.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple",
+      "_meta": {
+        "title": "Load Checkpoint"
+      }
+    },
+    "5": {
+      "inputs": {
+        "width": 768,
+        "height": 694,
+        "batch_size": 1
+      },
+      "class_type": "EmptyLatentImage",
+      "_meta": {
+        "title": "Empty Latent Image"
+      }
+    },
+    "6": {
+      "inputs": {
+        "text": "reddit photograph of beautiful dressed {{ ethnicity }} woman in her {{ age }} yo with {{ hairColor }} hair, {{ hairStyle }} hairstyle, {{ bodyType }} body with ({{ breasts }} breasts and {{ buttocks }} butt and {{ eyeColor }} eyes. she is ({{ storyPrompt }}:1.2). highly detailed amateur private mobile raw photograph taken on iphone with iso film grain.",
+        "clip": [
+          "4",
+          1
+        ]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (Prompt)"
+      }
+    },
+    "7": {
+      "inputs": {
+        "text": "nude, naked, pussy, nipples, anus, skimpy, cock, penis, labia, transparent, butt, topless, ass, blanket, central composition, worst quality, low quality, low resolution, unrealistic, saturated, high contrast, blurred, absurd, surrealistic, cgi, render, painting, drawing, sketch, cartoon, anime, manga, 3d, watermark, signature, label, text, logo, worst body proportions, deformed, mutation, ugly, fused fingers, bad hands, missing fingers, a, an, the",
+        "clip": [
+          "4",
+          1
+        ]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (Prompt)"
+      }
+    },
+    "8": {
+        "inputs": {
+        "stop_at_clip_layer": 2,
+        "clip": [
+          "4",
+          1
+        ]},
+        "class_type": "CLIPTextEncode",
+        "_meta": {
+          "title": "CLIP Text Encode (Prompt)"
+        }
+      },
+    "10": {
+      "inputs": {
+        "samples": [
+          "3",
+          0
+        ],
+        "vae": [
+          "4",
+          2
+        ]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "11": {
+      "inputs": {
+        "filename_prefix": "ComfyUI",
+        "images": [
+          "10",
+          0
+        ]
+      },
+      "class_type": "SaveImage",
+      "_meta": {
+        "title": "Save Image"
+      }
+    }
+  }
