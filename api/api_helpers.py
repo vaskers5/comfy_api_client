@@ -7,15 +7,39 @@ import os
 from api.websocket_api import queue_prompt, get_history, get_image, upload_image, clear_comfy_cache
 from api.open_websocket import open_websocket_connection
 
-def generate_image_by_prompt(prompt, output_path, save_previews=False):
+
+def generate_image_by_prompt(prompt, save_previews=False) -> list[Image]:
   try:
     ws, server_address, client_id = open_websocket_connection()
     prompt_id = queue_prompt(prompt, client_id, server_address)['prompt_id']
     track_progress(prompt, ws, prompt_id)
     images = get_images(prompt_id, server_address, save_previews)
-    save_image(images, output_path, save_previews)
+    result_images = []
+    for image in images:
+      result_images.append(Image.open(io.BytesIO(image['image_data'])))
+    return result_images
   finally:
     ws.close()
+
+
+def load_cache_models(workflow):
+  try:
+    ws, server_address, client_id = open_websocket_connection()
+    prompt_id = queue_prompt(workflow, client_id, server_address)['prompt_id']
+    track_progress(workflow, ws, prompt_id)
+  finally:
+    ws.close()
+
+# def generate_image_by_prompt(prompt, output_path, save_previews=False, img_paths=None):
+#   try:
+#     ws, server_address, client_id = open_websocket_connection()
+#     prompt_id = queue_prompt(prompt, client_id, server_address)['prompt_id']
+#     track_progress(prompt, ws, prompt_id)
+#     images = get_images(prompt_id, server_address, save_previews)
+#     save_image(images, output_path, save_previews)
+#   finally:
+#     ws.close()
+
 
 def generate_image_by_prompt_and_image(prompt, output_path, input_path, filename, save_previews=False):
   try:
@@ -71,7 +95,11 @@ def track_progress(prompt, ws, prompt_id):
 
 def get_images(prompt_id, server_address, allow_preview = False):
   output_images = []
-
+  # import json
+  # with open('history.json', 'w') as f:
+  #   f.write(json.dumps(get_history(prompt_id, server_address)))
+  
+  # print(get_history(prompt_id, server_address))
   history = get_history(prompt_id, server_address)[prompt_id]
   for node_id in history['outputs']:
       node_output = history['outputs'][node_id]

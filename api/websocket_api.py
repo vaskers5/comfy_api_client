@@ -22,7 +22,9 @@ def upload_image(input_path, name, server_address, image_type="input", overwrite
 def queue_prompt(prompt, client_id, server_address):
   p = {"prompt": prompt, "client_id": client_id}
   headers = {'Content-Type': 'application/json'}
-  data = json.dumps(p).encode('utf-8')
+  # print(type(p), json.dumps(p))
+  # data = json.dumps(p).encode('utf-8')
+  data = json.dumps(eval(json.loads(json.dumps(str(p))))).encode('utf-8')
   req =  urllib.request.Request("http://{}/prompt".format(server_address), data=data, headers=headers)
   return json.loads(urllib.request.urlopen(req).read())
 
